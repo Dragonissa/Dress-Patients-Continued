@@ -30,6 +30,7 @@ namespace DressPatient
                     {
                         canTargetPawns = true,
                         canTargetItems = true,
+                        canTargetMutants = false,
                         mapObjectTargetsMustBeAutoAttackable = false,
                         validator = ((TargetInfo target) => {
                             if (!target.HasThing)
