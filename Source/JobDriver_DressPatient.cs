@@ -18,10 +18,10 @@ namespace DressPatient
             {
                 if (targetPawn == null)
                 {
-                    if (TargetIsCorpse)
+/*                    if (TargetIsCorpse)
                     {
                         targetPawn = (TargetThingA as Corpse).InnerPawn;
-                    } else
+                    } else*/
                     {
                         targetPawn = TargetThingA as Pawn;
                     }

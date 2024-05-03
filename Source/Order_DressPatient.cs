@@ -42,13 +42,14 @@ namespace DressPatient
                             }
                             else
                             {
-                                Corpse corpse = target.Thing as Corpse;
+/*                                Corpse corpse = target.Thing as Corpse;
                                 if (corpse == null)
                                     return false;
                                 pawn = corpse.InnerPawn;
                                 if (pawn == null)
                                     return false;
-                                return pawn.apparel != null;
+                                return pawn.apparel != null;*/
+                                return false;
                             }
                         })
                     };
@@ -78,8 +79,8 @@ namespace DressPatient
                         return false;
                     }
                     Pawn targetPawn = targetBody.Thing as Pawn;
-                    if (targetBody.Thing is Corpse targetCorpse)
-                        targetPawn = targetCorpse.InnerPawn;
+/*                    if (targetBody.Thing is Corpse targetCorpse)
+                        targetPawn = targetCorpse.InnerPawn;*/
                     if (targetPawn == null)
                     {
                         Log.Error("Attempted to find apparel to dress nonexistent body.");
