@@ -10,21 +10,20 @@ namespace DressPatient
     class JobDriver_DressPatient : JobDriver
     {
 
-        public bool TargetIsCorpse => TargetThingA as Corpse != null;
+        public bool TargetIsCorpse => TargetThingA is Corpse;
 
         public Pawn TargetPawn
         {
             get
             {
-                if (targetPawn == null)
+                if (targetPawn != null) return targetPawn;
+                if (TargetThingA is Corpse corpse)
                 {
-                    if (TargetIsCorpse)
-                    {
-                        targetPawn = (TargetThingA as Corpse).InnerPawn;
-                    } else
-                    {
-                        targetPawn = TargetThingA as Pawn;
-                    }
+                    targetPawn = corpse.InnerPawn;
+                } 
+                else
+                {
+                    targetPawn = TargetThingA as Pawn;
                 }
                 return targetPawn;
             }
