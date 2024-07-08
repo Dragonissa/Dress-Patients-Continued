@@ -51,5 +51,19 @@ namespace DressPatient
 
             return true;
         }
+        
+        
+
+        //ThatHitmann did this method. Blame him if it's broken
+        public static bool IsHumanCorpse(this Thing thing, out Pawn innerPawn)
+        {
+            if (thing is Corpse corpse)
+            {
+                innerPawn = corpse.InnerPawn;
+                return !(innerPawn.RaceProps.IsMechanoid || innerPawn.IsMutant || innerPawn.RaceProps.intelligence < (Intelligence)2);
+            }
+            innerPawn = null;
+            return false;
+        }
     }
 }

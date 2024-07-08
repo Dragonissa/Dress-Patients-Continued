@@ -32,7 +32,7 @@ namespace DressPatient
                         canTargetItems = true,
                         canTargetMutants = false,
                         mapObjectTargetsMustBeAutoAttackable = false,
-                        validator = ((TargetInfo target) => {
+                        validator = (target => {
                             if (!target.HasThing)
                                 return false;
 
@@ -40,17 +40,11 @@ namespace DressPatient
                             {
                                 return pawn.apparel != null && pawn.IsPatient();
                             }
-                            else
-                            {
-/*                                Corpse corpse = target.Thing as Corpse;
-                                if (corpse == null)
-                                    return false;
-                                pawn = corpse.InnerPawn;
-                                if (pawn == null)
-                                    return false;
-                                return pawn.apparel != null;*/
-                                return false;
-                            }
+
+                            Log.Message("We checking if this is valid");
+                            //Blame Thathitmann
+                            if (!DressPatientUtility.IsHumanCorpse(target.Thing, out Pawn deadPawn)) return false;
+                            return deadPawn.apparel != null;
                         })
                     };
                 }
@@ -79,8 +73,8 @@ namespace DressPatient
                         return false;
                     }
                     Pawn targetPawn = targetBody.Thing as Pawn;
-/*                    if (targetBody.Thing is Corpse targetCorpse)
-                        targetPawn = targetCorpse.InnerPawn;*/
+                    if (targetBody.Thing is Corpse targetCorpse)
+                        targetPawn = targetCorpse.InnerPawn;
                     if (targetPawn == null)
                     {
                         Log.Error("Attempted to find apparel to dress nonexistent body.");
@@ -131,7 +125,22 @@ namespace DressPatient
                     //option = new FloatMenuOption("CannotDress".Translate(targetBody.Thing.LabelCap, targetBody.Thing) + " (" + "NoPath".Translate() + ")", null);
                     continue;
                 }
-
+                
+                //Thathitmann did this
+                //Skip if nothing is there
+                //Ensure pawn is either patient or human corpse
+                if (targetBody.Thing is Pawn targetPawn)
+                {
+                    //Skip non-patient pawns
+                    if (!targetPawn.IsPatient()) continue;
+                }
+                else if (targetBody.Thing is Corpse corpse)
+                {
+                    //Skip non-human corpses (neither ghoul nor animal nor mechanoid)
+                    if (!corpse.IsHumanCorpse(out _)) continue;
+                }
+                
+                
                 // Add menu option to dress patient. User will be asked to select a target.
                 FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("DressOther".Translate(targetBody.Thing.LabelCap, targetBody.Thing), delegate()
                 {
