@@ -41,7 +41,7 @@ namespace DressPatient
                                 return pawn.apparel != null && pawn.IsPatient();
                             }
 
-                            Log.Message("We checking if this is valid");
+                            Log.Message("Checking if this is valid");
                             //Blame Thathitmann
                             if (!DressPatientUtility.IsHumanCorpse(target.Thing, out Pawn deadPawn)) return false;
                             return deadPawn.apparel != null;
@@ -69,7 +69,7 @@ namespace DressPatient
                         return false;
                     if (!targetBody.HasThing)
                     {
-                        Log.Error("Attempted to find apparel to dress nonexistent body.");
+                        Log.ErrorOnce("Attempted to find apparel to dress nonexistent body.", 972365687);
                         return false;
                     }
                     Pawn targetPawn = targetBody.Thing as Pawn;
@@ -77,7 +77,7 @@ namespace DressPatient
                         targetPawn = targetCorpse.InnerPawn;
                     if (targetPawn == null)
                     {
-                        Log.Error("Attempted to find apparel to dress nonexistent body.");
+                        Log.ErrorOnce("Attempted to find apparel to dress nonexistent body.", 972365687);
                         return false;
                     }
                     if (!ApparelUtility.HasPartsToWear(targetPawn, apparel.def))
