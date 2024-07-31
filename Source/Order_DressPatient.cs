@@ -40,8 +40,6 @@ namespace DressPatient
                             {
                                 return pawn.apparel != null && pawn.IsPatient();
                             }
-
-                            Log.Message("Checking if this is valid");
                             //Blame Thathitmann
                             if (!DressPatientUtility.IsHumanCorpse(target.Thing, out Pawn deadPawn)) return false;
                             return deadPawn.apparel != null;
