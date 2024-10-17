@@ -40,6 +40,7 @@ namespace DressPatient
                             {
                                 return pawn.apparel != null && pawn.IsPatient();
                             }
+
                             //Blame Thathitmann
                             if (!DressPatientUtility.IsHumanCorpse(target.Thing, out Pawn deadPawn)) return false;
                             return deadPawn.apparel != null;
@@ -58,7 +59,7 @@ namespace DressPatient
             {
                 canTargetItems = true,
                 mapObjectTargetsMustBeAutoAttackable = false,
-                validator = ((TargetInfo target) =>
+                validator = (target =>
                 {
                     if (!target.HasThing)
                         return false;
@@ -113,6 +114,7 @@ namespace DressPatient
             if (pawn.jobs == null)
                 return;
 
+            
             // Find valid patients.
             foreach (LocalTargetInfo targetBody in GenUI.TargetsAt(clickPos, TargetParametersBody))
             {
@@ -136,15 +138,36 @@ namespace DressPatient
                 {
                     //Skip non-human corpses (neither ghoul nor animal nor mechanoid)
                     if (!corpse.IsHumanCorpse(out _)) continue;
+                    targetPawn = corpse.InnerPawn;
+                }
+                else
+                {
+	                //Skip if it's neither a pawn nor a corpse
+	                continue;
                 }
                 
                 
                 // Add menu option to dress patient. User will be asked to select a target.
                 FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("DressOther".Translate(targetBody.Thing.LabelCap, targetBody.Thing), delegate()
                 {
-                    Find.Targeter.BeginTargeting(TargetParemetersApparel(targetBody), (LocalTargetInfo targetApparel) => {
-                        targetApparel.Thing.SetForbidden(false);
-                        pawn.jobs.TryTakeOrderedJob(new Job(DefDatabase<JobDef>.GetNamed("DressPatient"), targetBody, targetApparel));
+                    Find.Targeter.BeginTargeting(TargetParemetersApparel(targetBody), targetApparel =>
+                    {
+	                    Thing apparel = targetApparel.Thing;
+                        apparel.SetForbidden(false);
+                        if (!ApparelUtility.HasPartsToWear(targetPawn, apparel.def) || !((Apparel)apparel).PawnCanWear(targetPawn, true))
+                        {
+	                        //Do nothing and error if pawn cannot wear
+	                        Messages.Message("CannotDressIncompatibleApparrel".Translate(targetPawn.Name.ToStringShort), MessageTypeDefOf.RejectInput);
+                        }
+                        else if (CompBiocodable.IsBiocoded(apparel) && !CompBiocodable.IsBiocodedFor(apparel, targetPawn))
+                        {
+	                        //Do nothing and error if clothing is biocoded to someone else
+	                        Messages.Message("CannotDressBiocoded".Translate(targetPawn.Name.ToStringShort), MessageTypeDefOf.RejectInput);
+                        }
+                        else
+                        {
+	                        pawn.jobs.TryTakeOrderedJob(new Job(DefDatabase<JobDef>.GetNamed("DressPatient"), targetBody, targetApparel));
+                        }
                     });
                 }, MenuOptionPriority.High), pawn, targetBody);
                 opts.Add(option);
