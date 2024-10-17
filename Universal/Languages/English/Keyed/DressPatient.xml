@@ -2,6 +2,6 @@
 <LanguageData>
   <DressOther>Dress {0}</DressOther>
   <CannotDress>Cannot dress {0}</CannotDress>
-  <CannotDressIncompatibleApparrel>Cannot dress {0}; is not capable of wearing these clothes.</CannotDressIncompatibleApparrel>
+  <CannotDressIncompatibleApparrel>Cannot dress {0}; pawn is not capable of wearing these clothes.</CannotDressIncompatibleApparrel>
   <CannotDressBiocoded>Cannot dress {0}; clothing is biocoded to someone else.</CannotDressBiocoded>
 </LanguageData>
