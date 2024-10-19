@@ -51,7 +51,11 @@ namespace DressPatient
 
             return true;
         }
-        
+
+        public static bool IsValidPawn(this Pawn pawn)
+        {
+	        return (pawn.IsPrisonerOfColony && DressPatientMod.settings.dressPrisoners) || pawn.IsPatient();
+        }
         
 
         //ThatHitmann did this method. Blame him if it's broken

@@ -2,5 +2,8 @@
 <LanguageData>
   <DressOther>Одеть {0}</DressOther>
   <CannotDress>Не может одеть {0}</CannotDress>
-
+  <CannotDressIncompatibleApparrel>Не может одеть {0}; Пешка не способна носить эту одежду.</CannotDressIncompatibleApparrel>
+  <CannotDressBiocoded>Не может одеть {0}; одежда биокодируется на кого-то другого.</CannotDressBiocoded>
+  <!-- used as label for a checkbox in config -->
+  <DressPrisonersConfig>Платье заключенные?</DressPrisonersConfig>
 </LanguageData>

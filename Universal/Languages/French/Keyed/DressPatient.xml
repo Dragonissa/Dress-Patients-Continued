@@ -2,4 +2,8 @@
 <LanguageData>
   <DressOther>Habiller {0}</DressOther>
   <CannotDress>Ne peut pas habiller {0}</CannotDress>
+  <CannotDressIncompatibleApparrel>Ne peut pas habiller {0}; Le pion n'est pas capable de porter ces vêtements.</CannotDressIncompatibleApparrel>
+  <CannotDressBiocoded>Ne peut pas habiller {0}; les vêtements sont biocodés à quelqu'un d'autre.</CannotDressBiocoded>
+  <!-- used as label for a checkbox in config -->
+  <DressPrisonersConfig>Habiller prisonniers?</DressPrisonersConfig>
 </LanguageData>

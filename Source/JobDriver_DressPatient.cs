@@ -41,10 +41,10 @@ namespace DressPatient
             }
         }
 
-        private Pawn targetPawn = null;
-        private Apparel apparel = null;
+        private Pawn targetPawn;
+        private Apparel apparel;
         private int duration;
-        private int unequipBuffer = 0;
+        private int unequipBuffer;
 
         public override void ExposeData()
         {
@@ -88,7 +88,7 @@ namespace DressPatient
         {
             this.FailOnDespawnedOrNull(TargetIndex.A);
             if (!TargetIsCorpse)
-                this.FailOn(() => !TargetPawn.IsPatient());
+                this.FailOn(() => !TargetPawn.IsValidPawn());
             this.FailOnBurningImmobile(TargetIndex.B);
 
             // Fetch apparel and carry to patient.
@@ -97,21 +97,27 @@ namespace DressPatient
             yield return Toils_Haul.CarryHauledThingToCell(TargetIndex.A);
             yield return Toils_Haul.PlaceCarriedThingInCellFacing(TargetIndex.A);
 
-            // Wait duration, strip conflicting clothes periodically.
-            Toil stripAndDress = new Toil()
+            //Wait duration, strip conflicting clothes periodically.
+            // Toil stripAndDress = new Toil
+            // {
+            //     defaultCompleteMode = ToilCompleteMode.Delay,
+            //     defaultDuration = duration,
+            //     tickAction = delegate
+            //     {
+            //         unequipBuffer++;
+            //         TryUnequipSomething();
+            //     }
+            // };
+            Toil stripAndDress = Toils_General.WaitWith(TargetIndex.A, duration, true, face: TargetIndex.A);
+            stripAndDress.tickAction = delegate
             {
-                defaultCompleteMode = ToilCompleteMode.Delay,
-                defaultDuration = duration,
-                tickAction = delegate ()
-                {
-                    unequipBuffer++;
-                    TryUnequipSomething();
-                }
+	            unequipBuffer++;
+	            TryUnequipSomething();
             };
             stripAndDress.WithProgressBarToilDelay(TargetIndex.A);
             stripAndDress.FailOnDespawnedOrNull(TargetIndex.A);
             if (!TargetIsCorpse)
-                stripAndDress.FailOn(() => !TargetPawn.IsPatient());
+                stripAndDress.FailOn(() => !TargetPawn.IsValidPawn());
             yield return stripAndDress;
 
             // Equip apparel.

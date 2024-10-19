@@ -32,30 +32,31 @@ namespace DressPatient
                         canTargetItems = true,
                         canTargetMutants = false,
                         mapObjectTargetsMustBeAutoAttackable = false,
-                        validator = (target => {
-                            if (!target.HasThing)
-                                return false;
+                        validator = target => {
+	                        if (!target.HasThing)
+		                        return false;
 
-                            if (target.Thing is Pawn pawn)
-                            {
-                                return pawn.apparel != null && pawn.IsPatient();
-                            }
+	                        if (target.Thing is Pawn pawn)
+	                        {
+		                        //If it's a living patient or prisoner, we can do it
+		                        return pawn.apparel != null && pawn.IsValidPawn();
+	                        }
 
-                            //Blame Thathitmann
-                            if (!DressPatientUtility.IsHumanCorpse(target.Thing, out Pawn deadPawn)) return false;
-                            return deadPawn.apparel != null;
-                        })
+	                        //If it's a human corpse, we can do it
+	                        if (!target.Thing.IsHumanCorpse(out Pawn deadPawn)) return false;
+	                        return deadPawn.apparel != null;
+                        }
                     };
                 }
                 return targetParametersBody;
             }
         }
 
-        private static TargetingParameters targetParametersBody = null;
+        private static TargetingParameters targetParametersBody;
 
-        public static TargetingParameters TargetParemetersApparel(LocalTargetInfo targetBody)
+        public static TargetingParameters TargetParametersApparel(LocalTargetInfo targetBody)
         {
-            return new TargetingParameters()
+            return new TargetingParameters
             {
                 canTargetItems = true,
                 mapObjectTargetsMustBeAutoAttackable = false,
@@ -131,8 +132,8 @@ namespace DressPatient
                 //Ensure pawn is either patient or human corpse
                 if (targetBody.Thing is Pawn targetPawn)
                 {
-                    //Skip non-patient pawns
-                    if (!targetPawn.IsPatient()) continue;
+                    //Skip non-patient pawns and non-prisoner pawns
+                    if (!targetPawn.IsValidPawn()) continue;
                 }
                 else if (targetBody.Thing is Corpse corpse)
                 {
@@ -148,9 +149,9 @@ namespace DressPatient
                 
                 
                 // Add menu option to dress patient. User will be asked to select a target.
-                FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("DressOther".Translate(targetBody.Thing.LabelCap, targetBody.Thing), delegate()
+                FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption("DressOther".Translate(targetBody.Thing.LabelCap, targetBody.Thing), delegate
                 {
-                    Find.Targeter.BeginTargeting(TargetParemetersApparel(targetBody), targetApparel =>
+                    Find.Targeter.BeginTargeting(TargetParametersApparel(targetBody), targetApparel =>
                     {
 	                    Thing apparel = targetApparel.Thing;
                         apparel.SetForbidden(false);

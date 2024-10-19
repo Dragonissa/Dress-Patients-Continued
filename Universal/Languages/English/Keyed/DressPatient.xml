@@ -4,4 +4,6 @@
   <CannotDress>Cannot dress {0}</CannotDress>
   <CannotDressIncompatibleApparrel>Cannot dress {0}; pawn is not capable of wearing these clothes.</CannotDressIncompatibleApparrel>
   <CannotDressBiocoded>Cannot dress {0}; clothing is biocoded to someone else.</CannotDressBiocoded>
+  <!-- used as label for a checkbox in config -->
+  <DressPrisonersConfig>Dress prisoners?</DressPrisonersConfig>
 </LanguageData>
