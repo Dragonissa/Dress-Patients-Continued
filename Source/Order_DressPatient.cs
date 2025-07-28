@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using AlienRace;
 
 namespace DressPatient
 {
@@ -30,21 +31,23 @@ namespace DressPatient
                     {
                         canTargetPawns = true,
                         canTargetItems = true,
-                        canTargetMutants = false,
+                        canTargetSubhumans = false,
+                        canTargetEntities = false,
+                        canTargetMechs = false,
                         mapObjectTargetsMustBeAutoAttackable = false,
                         validator = target => {
-	                        if (!target.HasThing)
-		                        return false;
+                            if (!target.HasThing)
+                                return false;
 
-	                        if (target.Thing is Pawn pawn)
-	                        {
-		                        //If it's a living patient or prisoner, we can do it
-		                        return pawn.apparel != null && pawn.IsValidPawn();
-	                        }
+                            if (target.Thing is Pawn pawn)
+                            {
+                                //If it's a living patient or prisoner, we can do it
+                                return pawn.apparel != null && pawn.IsValidPawn();
+                            }
 
-	                        //If it's a human corpse, we can do it
-	                        if (!target.Thing.IsHumanCorpse(out Pawn deadPawn)) return false;
-	                        return deadPawn.apparel != null;
+                            //If it's a human corpse, we can do it
+                            if (!target.Thing.IsHumanCorpse(out Pawn deadPawn)) return false;
+                            return deadPawn.apparel != null;
                         }
                     };
                 }
